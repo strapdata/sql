@@ -23,13 +23,12 @@ import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.join.query.JoinQueryBuilders;
 
 public class QueryMaker extends Maker {
 
 	/**
 	 * 将where条件构建成query
-	 * 
+	 *
 	 * @param where
 	 * @return
 	 * @throws SqlParseException
@@ -68,7 +67,7 @@ public class QueryMaker extends Maker {
 
 	/**
 	 * 增加嵌套插
-	 * 
+	 *
 	 * @param boolQuery
 	 * @param where
 	 * @param subQuery
@@ -85,8 +84,6 @@ public class QueryMaker extends Maker {
                 }
 
                 subQuery = QueryBuilders.nestedQuery(condition.getNestedPath(), subQuery, ScoreMode.None);
-            } else if(condition.isChildren()) {
-            	subQuery = JoinQueryBuilders.hasChildQuery(condition.getChildType(), subQuery, ScoreMode.None);
             }
         }
 

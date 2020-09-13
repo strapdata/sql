@@ -33,7 +33,6 @@ import org.elasticsearch.common.xcontent.NamedXContentRegistry;
 import org.elasticsearch.common.xcontent.XContentParser;
 import org.elasticsearch.common.xcontent.json.JsonXContent;
 import org.elasticsearch.common.xcontent.json.JsonXContentParser;
-import org.elasticsearch.join.aggregations.JoinAggregationBuilders;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.script.ScriptType;
 import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
@@ -209,18 +208,6 @@ public class AggMaker {
             }
 
             return nestedBuilder.subAggregation(builder);
-        } else if (kvValue.key != null && (kvValue.key.equals("children"))) {
-            ChildrenType childrenType = (ChildrenType) kvValue.value;
-
-            builder.field(childrenType.field);
-
-            AggregationBuilder childrenBuilder;
-
-            String childrenAggName = childrenType.field + "@CHILDREN";
-
-            childrenBuilder = JoinAggregationBuilders.children(childrenAggName,childrenType.childType);
-
-            return childrenBuilder;
         }
 
         return builder.field(kvValue.toString());

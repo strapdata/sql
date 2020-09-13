@@ -33,7 +33,6 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.join.aggregations.JoinAggregationBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.BucketOrder;
@@ -104,16 +103,6 @@ public class AggregationQueryAction extends QueryAction {
                     }
 
                     request.addAggregation(wrapNestedIfNeeded(nestedBuilder, field.isReverseNested()));
-                } else if (field.isChildren()) {
-                    AggregationBuilder childrenBuilder = createChildrenAggregation(field);
-
-                    if (insertFilterIfExistsAfter(lastAgg, groupBy, childrenBuilder, 1)) {
-                        groupBy.remove(1);
-                    } else {
-                        childrenBuilder.subAggregation(lastAgg);
-                    }
-
-                    request.addAggregation(childrenBuilder);
                 } else {
                     request.addAggregation(lastAgg);
                 }
@@ -138,17 +127,6 @@ public class AggregationQueryAction extends QueryAction {
                         }
 
                         lastAgg.subAggregation(wrapNestedIfNeeded(nestedBuilder, field.isReverseNested()));
-                    } else if (field.isChildren()) {
-                        AggregationBuilder childrenBuilder = createChildrenAggregation(field);
-
-                        if (insertFilterIfExistsAfter(subAgg, groupBy, childrenBuilder, i + 1)) {
-                            groupBy.remove(i + 1);
-                            i++;
-                        } else {
-                            childrenBuilder.subAggregation(subAgg);
-                        }
-
-                        lastAgg.subAggregation(childrenBuilder);
                     } else {
                         lastAgg.subAggregation(subAgg);
                     }
@@ -231,7 +209,7 @@ public class AggregationQueryAction extends QueryAction {
         }
 
         if (!refrence) lastAgg = aggMaker.makeGroupAgg(field);
-        
+
         return lastAgg;
     }
 
@@ -261,16 +239,6 @@ public class AggregationQueryAction extends QueryAction {
         nestedBuilder = AggregationBuilders.nested(getNestedAggName(field),nestedPath);
 
         return nestedBuilder;
-    }
-
-    private AggregationBuilder createChildrenAggregation(Field field) {
-        AggregationBuilder childrenBuilder;
-
-        String childType = field.getChildType();
-
-        childrenBuilder = JoinAggregationBuilders.children(getChildrenAggName(field),childType);
-
-        return childrenBuilder;
     }
 
     private String getNestedAggName(Field field) {

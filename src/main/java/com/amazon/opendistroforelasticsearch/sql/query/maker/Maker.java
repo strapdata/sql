@@ -43,7 +43,6 @@ import org.elasticsearch.common.xcontent.ToXContent;
 import org.elasticsearch.common.xcontent.XContentParser;
 import org.elasticsearch.common.xcontent.json.JsonXContent;
 import org.elasticsearch.index.query.*;
-import org.elasticsearch.join.query.JoinQueryBuilders;
 import org.elasticsearch.script.Script;
 import com.amazon.opendistroforelasticsearch.sql.parser.ScriptFilter;
 import com.amazon.opendistroforelasticsearch.sql.parser.SubQueryExpression;
@@ -308,16 +307,6 @@ public abstract class Maker {
             BoolQueryBuilder nestedFilter = QueryMaker.explain(whereNested);
 
             toXContent = QueryBuilders.nestedQuery(name, nestedFilter, ScoreMode.None);
-        break;
-        case CHILDREN_COMPLEX:
-            if(value == null || ! (value instanceof Where) )
-                throw new SqlParseException("unsupported nested condition");
-
-            Where whereChildren = (Where) value;
-            BoolQueryBuilder childrenFilter = QueryMaker.explain(whereChildren);
-            //todo: pass score mode
-            toXContent = JoinQueryBuilders.hasChildQuery(name, childrenFilter,ScoreMode.None);
-
         break;
         case SCRIPT:
             ScriptFilter scriptFilter = (ScriptFilter) value;

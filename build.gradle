@@ -16,12 +16,12 @@
 buildscript {
 
     ext {
-        es_version = System.getProperty("es.version", "6.8.1")
+        es_version = System.getProperty("es.version", "6.8.4")
     }
     // This isn't applying from repositories.gradle so repeating it here
     repositories {
         mavenCentral()
-    } 
+    }
 
     dependencies {
         classpath "org.elasticsearch.gradle:build-tools:${es_version}"
@@ -50,7 +50,7 @@ ext {
     isSnapshot = "true" == System.getProperty("build.snapshot", "true")
 }
 
-version = "${opendistroVersion}.0" 
+version = "${opendistroVersion}.0"
 
 apply plugin: 'elasticsearch.esplugin'
 
@@ -143,9 +143,13 @@ thirdPartyAudit.enabled = false
 dependencies {
     compile group: 'com.alibaba', name: 'druid', version:'1.0.15'
     compile group: 'org.locationtech.spatial4j', name: 'spatial4j', version:'0.7'
-    compile group: "org.elasticsearch.plugin", name: 'parent-join-client', version: "${es_version}"
-    compile group: "org.elasticsearch.plugin", name: 'reindex-client', version: "${es_version}"
-    compile group: 'com.google.guava', name: 'guava', version:'15.0'
+    /*
+    compile group: "com.strapdata.elasticsearch.plugin", name: 'parent-join-client', version: "${es_version}.10"
+    compile("com.strapdata.elasticsearch.plugin:reindex-client:${es_version}.10") {
+        exclude group:"org.apache.httpcomponents", module:"httpcore"
+    }
+    */
+    compileOnly group: 'com.google.guava', name: 'guava', version:'19.0'
     compile group: 'org.json', name: 'json', version:'20180813'
 
     //compileOnly group: 'org.locationtech.jts', name: 'jts-core', version:'1.15.0'

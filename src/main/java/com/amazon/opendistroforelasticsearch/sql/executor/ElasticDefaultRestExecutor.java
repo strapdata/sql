@@ -30,7 +30,6 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchScrollRequest;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.index.reindex.BulkIndexByScrollResponseContentListener;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.elasticsearch.rest.BytesRestResponse;
 import org.elasticsearch.rest.RestChannel;
@@ -79,8 +78,6 @@ public class ElasticDefaultRestExecutor implements RestExecutor {
             sendDefaultResponse(executor.getHits(), channel);
         } else if (request instanceof SearchRequest) {
             client.search((SearchRequest) request, new RestStatusToXContentListener<>(channel));
-        } else if (request instanceof DeleteByQueryRequest) {
-            requestBuilder.getBuilder().execute(new BulkIndexByScrollResponseContentListener(channel, Maps.newHashMap()));
         } else if (request instanceof GetIndexRequest) {
             requestBuilder.getBuilder().execute(new GetIndexRequestRestListener(channel, (GetIndexRequest) request));
         } else if (request instanceof SearchScrollRequest) {
