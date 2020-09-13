@@ -1,0 +1,26 @@
+language: java
+jdk:
+  - oraclejdk12
+sudo: false
+install:
+  - cd ${TRAVIS_BUILD_DIR}
+  - java -version
+  - ./gradlew --version
+  - ./gradlew test
+script:
+  - ./gradlew assemble
+  - ls build/distributions/
+cache:
+  directories:
+    - "$HOME/.m2"
+    - "$HOME/.gradle/caches/"
+deploy:
+  - provider: releases
+    api_key: "$GITHUB_TOKEN"
+    overwrite: true
+    draft: true
+    file: "build/distributions/opendistro_sql-0.10.0.0.zip"
+    skip_cleanup: true
+    on:
+      tags: true
+      branch: opendistro-0.10-strapdata
