@@ -1,4 +1,4 @@
-# Open Distro for Elasticsearch SQL
+# Open Distro for Elasticsearch SQL (for Elassandra)
 
 
 Open Distro for Elasticsearch enables you to extract insights out of Elasticsearch using the familiar SQL query syntax. Use aggregations, group by, and where clauses to investigate your data. Read your data as JSON documents or CSV tables so you have the flexibility to use the format that works best for you.
@@ -69,17 +69,19 @@ curl -XPOST https://localhost:9200/_opendistro/_sql -u admin:admin -k -d '{"quer
         HAVING m >= 20
         ORDER BY SUM(age), m DESC
 
+* Show
+
+        SHOW TABLES LIKE ban%
+        DESCRIBE TABLES LIKE bank
+
+Not supported features:
+
 * Join
 
         SELECT b1.firstname, b1.lastname, b2.age
         FROM bank b1
         LEFT JOIN bank b2
         ON b1.age = b2.age AND b1.state = b2.state
-
-* Show
-
-        SHOW TABLES LIKE ban%
-        DESCRIBE TABLES LIKE bank
 
 * Delete
 
